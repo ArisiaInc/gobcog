@@ -386,11 +386,26 @@ class ClassAbilities(AdventureMixin):
                     theme = await self.config.theme()
                     extra_pets = await self.config.themes.all()
                     extra_pets = extra_pets.get(theme, {}).get("pets", {})
-                    pet_list = {**self.PETS, **extra_pets}
-                    pet_choices = list(pet_list.keys())
-                    pet = random.choice(pet_choices)
-                    roll = random.randint(1, 50)
+                    # randomly determine:
+                    # environment: how hard it is to catch a pet.
+                    # pet max dipl: factor for many too-hard pets to pull in.
+                    # pet min dipl: factor for how many small/easy pets to pull (players want at-level pets and should be able to get them...but not necessarily the first time!).
+                    # skill factor: how well the player did, which should be displayed and determine whether they catch the pet.  Easier pets are easier to ctch.
                     dipl_value = c.total_cha + (c.total_int // 3) + (c.luck // 2)
+                    env_roll = random.randint(1, 50)
+                    min_dipl_fact = random.randint(1, 6)
+                    max_dipl_fact = random.randint(1, 4)
+                    # make configurable to let people ajust; numbers between 1 and 2 are potentially interesting.
+                    familiar_variability = 2 
+                    min_dipl = dipl_value - int(familiar_variability ** min_dipl_fact)
+                    min_dipl = min_dipl if min_diipl >= 0 else 0
+                    max_dipl = dipl_value + int(familiar_variability ** max_dipl_fact)
+                    pet_list = {**self.PETS, **extra_pets}
+                    pet_list_limited = filter(lambda c: c[cha] >= min_dipl and c[cha] <= max_dipl, pet_list)
+                    # just in case this has nothing in it
+                    if pet_list_limited.len == 0 then pet_list_limited = pet_list
+                    pet_choices = list(pet_list_limited.keys())
+                    pet = random.choice(pet_choices)
                     pet_reqs = pet_list[pet].get("bonuses", {}).get("req", {})
                     pet_msg4 = ""
                     can_catch = True
