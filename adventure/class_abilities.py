@@ -387,7 +387,7 @@ class ClassAbilities(AdventureMixin):
                     extra_pets = await self.config.themes.all()
                     extra_pets = extra_pets.get(theme, {}).get("pets", {})
                     pet_list = {**self.PETS, **extra_pets}
-                    max_pet_cha = max(pet_list, key=lambda pet: pet['cha'])['cha']
+                    max_pet_cha = max(map(lambda pet: pet['cha'], pet_list.values()))
                     # randomly determine:
                     # environment: how hard it is to catch a pet.
                     # pet max dipl: factor for many too-hard pets to pull in.
