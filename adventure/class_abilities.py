@@ -396,7 +396,7 @@ class ClassAbilities(AdventureMixin):
                     dipl_value = c.total_cha + (c.total_int // 3) + (c.luck // 2)
                     # for this purpose, it's important that dipl_value not exceed max_pet_cha or the algorithm will be VERY confused.
                     dipl_value_base = dipl_value if dipl_value < max_pet_cha else max_pet_cha
-                    env_roll = random.randint(1, 50)
+                    roll = random.randint(1, 50)
                     min_dipl_fact = random.randint(1, 6)
                     max_dipl_fact = random.randint(1, 4)
                     # make configurable to let people ajust; numbers between 1 and 2 are potentially interesting.
@@ -406,7 +406,7 @@ class ClassAbilities(AdventureMixin):
                     max_dipl = dipl_value_base + int(familiar_variability ** max_dipl_fact)
 
                     
-                    pet_list_limited = filter(lambda c: c[cha] >= min_dipl and c[cha] <= max_dipl, pet_list)
+                    pet_list_limited = dict(filter(lambda kv: kv[1]['cha'] >= min_dipl and kv[1]['cha'] <= max_dipl, pet_list.items()))
                     # just in case this has nothing in it
                     if len(pet_list_limited) == 0:
                         pet_list_limited = pet_list
