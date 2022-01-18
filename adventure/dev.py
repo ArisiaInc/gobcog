@@ -75,7 +75,7 @@ class DevCommands(AdventureMixin):
         """[Dev] Set your level."""
         if not await self.no_dev_prompt(ctx):
             return 
-        c = await Character.from_json(ctx, self.config, user, self._daily_bonus)
+        c = await Character.from_json(ctx, self.config, ctx.author, self._daily_bonus)
         c.lvl = lvl
         await self.config.user(ctx.author).set(await c.to_json(ctx, self.config))
         await smart_embed(
