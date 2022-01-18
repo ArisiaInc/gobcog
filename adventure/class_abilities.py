@@ -408,7 +408,8 @@ class ClassAbilities(AdventureMixin):
                     
                     pet_list_limited = filter(lambda c: c[cha] >= min_dipl and c[cha] <= max_dipl, pet_list)
                     # just in case this has nothing in it
-                    if pet_list_limited.len == 0 then pet_list_limited = pet_list
+                    if len(pet_list_limited) == 0:
+                        pet_list_limited = pet_list
                     pet_choices = list(pet_list_limited.keys())
                     pet = random.choice(pet_choices)
                     pet_reqs = pet_list[pet].get("bonuses", {}).get("req", {})
