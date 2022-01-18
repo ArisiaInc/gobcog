@@ -81,7 +81,7 @@ class DevCommands(AdventureMixin):
         await smart_embed(
                             ctx,
                             _("**{}**, you are now level {}.").format(
-                                escape(ctx.author.display_name, lvl)
+                                escape(ctx.author.display_name), lvl
                             ),
                         )
 
