@@ -394,17 +394,18 @@ class ClassAbilities(AdventureMixin):
                     # pet min dipl: factor for how many small/easy pets to pull (players want at-level pets and should be able to get them...but not necessarily the first time!).
                     # skill factor: how well the player did, which should be displayed and determine whether they catch the pet.  Easier pets are easier to ctch.
                     dipl_value = c.total_cha + (c.total_int // 3) + (c.luck // 2)
-                    # for this purpose, it's important that dipl_value not exceed max_pet_cha or the algorithm will be VERY confused.
+                    # for this purpose, it's important that the dipl_value we use not exceed max_pet_cha or the algorithm will be VERY confused and unfilter the list again when it selects no items.
                     dipl_value_base = dipl_value if dipl_value < max_pet_cha else max_pet_cha
                     roll = random.randint(1, 50)
-                    min_dipl_fact = random.randint(1, 6)
-                    max_dipl_fact = random.randint(1, 4)
-                    # make configurable to let people ajust; numbers between 1 and 2 are potentially interesting.
+                    roll2 = random.randint(0, (2 if roll in [50, 25] else 5))
+                    min_dipl_log = random.randint(1, 6)
+                    max_dipl_log = random.randint(1, 4)
+                    # TODO make configurable to let people adjust; numbers between 1 and 2 are potentially interesting, and maybe others.
                     familiar_variability = 2 
-                    min_dipl = dipl_value_base - int(familiar_variability ** min_dipl_fact)
+                    min_dipl = dipl_value_base - int(familiar_variability ** min_dipl_log)
                     min_dipl = min_dipl if min_dipl >= 0 else 0
-                    max_dipl = dipl_value_base + int(familiar_variability ** max_dipl_fact)
-
+                    max_dipl = dipl_value_base + int(familiar_variability ** max_dipl_log)
+                    
                     
                     pet_list_limited = dict(filter(lambda kv: kv[1]['cha'] >= min_dipl and kv[1]['cha'] <= max_dipl, pet_list.items()))
                     # just in case this has nothing in it
@@ -441,11 +442,14 @@ class ClassAbilities(AdventureMixin):
                     user_msg = await ctx.send(pet_msg)
                     await asyncio.sleep(2)
                     pet_msg2 = box(
-                        _("{author} started tracking a wild {pet_name} with a roll of {dice}({roll}).").format(
+                        _("{author}[{dipl}] started tracking a wild {pet_name} [{pet_diff}] with rolls of {dice}({roll}) and {dice}({roll2}).").format(
                             dice=self.emojis.dice,
                             author=escape(ctx.author.display_name),
                             pet_name=pet,
+                            pet_diff=pet_list[pet][cha],
                             roll=roll,
+                            roll2=roll2,
+                            dipl=dipl_value,
                         ),
                         lang="css",
                     )
@@ -460,7 +464,7 @@ class ClassAbilities(AdventureMixin):
                         if force_catch:
                             roll = 0
                         else:
-                            roll = random.randint(0, (2 if roll in [50, 25] else 5))
+                            roll = roll2
                         if roll == 0:
                             if force_catch and any(x in c.sets for x in ["The Supreme One", "Ainz Ooal Gown"]):
                                 msg = random.choice(
@@ -491,8 +495,8 @@ class ClassAbilities(AdventureMixin):
                             await self.config.user(ctx.author).set(await c.to_json(ctx, self.config))
                         elif roll == 1:
                             bonus = _("But they stepped on a twig and scared it away.")
-                            pet_msg3 = box(
-                                _("{bonus}\nThe {pet} escaped.").format(bonus=bonus, pet=pet),
+                            pet_msg3 =  box(
+                                _("{bonus}\nThe {pet} escaped." if roll2 != 0 else "{bonus}\nYou captured {pet}, but it's too wild so you let it go.").format(bonus=bonus, pet=pet),
                                 lang="css",
                             )
                             await user_msg.edit(content=f"{pet_msg}\n{pet_msg2}\n{pet_msg3}{pet_msg4}")
