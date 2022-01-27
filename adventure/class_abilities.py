@@ -446,7 +446,7 @@ class ClassAbilities(AdventureMixin):
                             dice=self.emojis.dice,
                             author=escape(ctx.author.display_name),
                             pet_name=pet,
-                            pet_diff=pet_list[pet][cha],
+                            pet_diff=pet_list[pet]['cha'],
                             roll=roll,
                             roll2=roll2,
                             dipl=dipl_value,
