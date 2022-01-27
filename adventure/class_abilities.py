@@ -496,9 +496,7 @@ class ClassAbilities(AdventureMixin):
                         elif roll == 1:
                             bonus = _("But they stepped on a twig and scared it away.")
                             pet_msg3 =  box(
-                                _("{bonus}\nThe {pet} escaped." 
-                                   if roll2 != 0 
-                                   else "{bonus}\nYou captured {pet}, but it's too wild so you let it go.").format(bonus=bonus, pet=pet),
+                                _("{bonus}\nThe {pet} escaped." if roll2 != 0 else "{bonus}\nYou captured {pet}, but it's too wild so you let it go.").format(bonus=bonus, pet=pet),
                                 lang="css",
                             )
                             await user_msg.edit(content=f"{pet_msg}\n{pet_msg2}\n{pet_msg3}{pet_msg4}")
