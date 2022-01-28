@@ -503,13 +503,13 @@ class ClassAbilities(AdventureMixin):
                         else:
                             bonus = ""
                             pet_msg3 = box(
-                                _("{bonus}\nThe {pet} escaped.").format(bonus=bonus, pet=pet),
+                                _("{bonus}\nThe {pet} escaped." if roll2 != 0 else "{bonus}\nYou captured {pet}, but it's too wild so you let it go." ).format(bonus=bonus, pet=pet),
                                 lang="css",
                             )
                             await user_msg.edit(content=f"{pet_msg}\n{pet_msg2}\n{pet_msg3}{pet_msg4}")
                     else:
                         pet_msg3 = box(
-                            _("{bonus}\nThe {pet} escaped.").format(bonus=bonus, pet=pet),
+                            _("{bonus}\nThe {pet} escaped." if roll2 != 0 else "{bonus}\nYou captured {pet}, but it's too wild so you let it go." ).format(bonus=bonus, pet=pet),
                             lang="css",
                         )
                         await user_msg.edit(content=f"{pet_msg}\n{pet_msg2}\n{pet_msg3}{pet_msg4}")
