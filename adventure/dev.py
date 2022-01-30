@@ -71,19 +71,11 @@ class DevCommands(AdventureMixin):
         
     @commands.command()
     @commands.is_owner()
-    async def setlvl(self, ctx: commands.Context, lvl: int = 1):
-        """[Dev] Set your level."""
-        if not await self.no_dev_prompt(ctx):
-            return 
-        c = await Character.from_json(ctx, self.config, ctx.author, self._daily_bonus)
-        c.lvl = lvl
-        await self.config.user(ctx.author).set(await c.to_json(ctx, self.config))
+    async def meep(self, ctx: commands.Context):
+        """ testing"""
         await smart_embed(
-                            ctx,
-                            _("**{}**, you are now level {}.").format(
-                                escape(ctx.author.display_name), lvl
-                            ),
-                        )
+            ctx, _("meep meep")
+        )
 
     @commands.command()
     @commands.is_owner()
